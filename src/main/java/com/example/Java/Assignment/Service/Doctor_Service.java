@@ -52,12 +52,21 @@ public class Doctor_Service {
 
         String patientCity = patient.getCity();
 
+        int flag = 0;
+        String[] arr = {"DELHI","NOIDA","FARIDABAD"};
+        for(String s : arr){
+            if(s.equals(patientCity)){
+                flag = 1;
+            }
+        }
+
+        if (flag == 0) {
+            throw new NoDoctorsInLocationException("We are still waiting to expand to your location");
+        }
+
         if (patient != null) {
             List<Doctor> doctorsInLocation = doctorRepository.findByCity(City.valueOf(patientCity));
 
-            if (doctorsInLocation.isEmpty()) {
-                throw new NoDoctorsInLocationException("We are still waiting to expand to your location");
-            }
             log.info("Patient City: {}", patientCity);
 
             log.info("Doctors in Location: {}", doctorsInLocation.get(0).getCity());
